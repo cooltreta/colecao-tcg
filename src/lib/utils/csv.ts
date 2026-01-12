@@ -91,15 +91,21 @@ export function parseCsv(text: string): CsvRow[] {
   const header = splitRow(lines[0]).map((h) => h.toLowerCase());
   const idx = (name: string) => header.findIndex((h) => h === name);
 
-  const codeIdx = idx("code");
+  const codeIdx =
+  idx("code") !== -1
+    ? idx("code")
+    : idx("cardcode");
   const qtyIdx = header.findIndex((h) => h === "qty" || h === "quantity");
   const variantIdx = idx("variant");
   const conditionIdx = idx("condition");
   const languageIdx = idx("language");
 
-  if (codeIdx === -1 || qtyIdx === -1) {
-    throw new Error('CSV inválido. Precisas de colunas "code" e "qty".');
-  }
+ if (codeIdx === -1 || qtyIdx === -1) {
+  throw new Error(
+    'CSV inválido. Precisas de colunas "code" ou "cardCode" e "qty".'
+  );
+}
+
 
   const rows: CsvRow[] = [];
 
