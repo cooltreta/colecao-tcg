@@ -737,7 +737,7 @@ function preloadImagesFromCatalog(list: CatalogEntry[], limit = 96) {
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center justify-end gap-2">
+        <div className="flex w-full flex-col gap-2 md:w-auto md:flex-row md:items-center md:justify-end">
           <input
             ref={fileInputRef}
             type="file"
@@ -760,14 +760,14 @@ function preloadImagesFromCatalog(list: CatalogEntry[], limit = 96) {
           />
 
           <button
-            className="rounded-lg border px-3 py-2 text-sm"
+            className="rounded-lg border px-3 py-2 text-sm md:w-auto"
             onClick={() => pricesInputRef.current?.click()}
             title="Importar CSV de preços (Cardmarket)"
           >
             Importar Preços
           </button>
           <button
-          className="rounded-lg border px-3 py-2 text-sm"
+          className="rounded-lg border px-3 py-2 text-sm md:w-auto"
           onClick={() => {
             const a = document.createElement("a");
             a.href = "/examples/import_collection_example.csv";
@@ -782,7 +782,7 @@ function preloadImagesFromCatalog(list: CatalogEntry[], limit = 96) {
         </button>
 
           <button
-            className="rounded-lg border px-3 py-2 text-sm"
+            className="rounded-lg border px-3 py-2 text-sm md:w-auto"
             onClick={() => fileInputRef.current?.click()}
             title="Importar CSV"
           >
