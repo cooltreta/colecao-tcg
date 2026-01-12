@@ -737,7 +737,7 @@ function preloadImagesFromCatalog(list: CatalogEntry[], limit = 96) {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center justify-end gap-2">
           <input
             ref={fileInputRef}
             type="file"
@@ -789,12 +789,7 @@ function preloadImagesFromCatalog(list: CatalogEntry[], limit = 96) {
             Importar CSV
           </button>
 
-          <button
-            className="rounded-lg border px-3 py-2 text-sm"
-            onClick={() => void load()}
-          >
-            Recarregar
-          </button>
+
         </div>
       </div>
 
