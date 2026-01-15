@@ -12,6 +12,7 @@ export type CatalogEntry = {
   marketPrice?: number;
   inventoryPrice?: number;
   scrapedAt?: string;
+  traits?: string[];
 };
 
 let cache: CatalogEntry[] | null = null;
@@ -39,20 +40,25 @@ export async function nameByCode(code: string): Promise<string | null> {
  */
 export async function searchCatalog(
   query: string,
-  limit = 10
+  limit = 10,
+  offset = 0
 ): Promise<CatalogEntry[]> {
   const q = query.trim().toLowerCase();
   if (!q) return [];
 
   const data = await loadCatalog();
 
-  return data
-    .filter(
-      (c) =>
-        c.code.toLowerCase().includes(q) ||
-        c.name.toLowerCase().includes(q)
-    )
-    .slice(0, limit);
+  const results = data.filter(
+    (c) =>
+      c.code.toLowerCase().includes(q) ||
+      c.name.toLowerCase().includes(q) ||
+      c.set.toLowerCase().includes(q) ||
+      c.setName?.toLowerCase().includes(q) ||
+      c.type?.toLowerCase().includes(q) ||
+      (c.traits?.some((t) => t.toLowerCase().includes(q)) ?? false)
+  );
+
+  return results.slice(offset, offset + limit);
 }
 
 export async function getByCode(code: string): Promise<CatalogEntry | null> {

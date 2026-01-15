@@ -91,6 +91,11 @@ function toCatalogEntry(card, packTitleById) {
 
   const colors = Array.isArray(card?.colors) ? card.colors : [];
 
+  const traits = Array.isArray(card?.types)
+  ? card.types.map((t) => String(t).trim()).filter(Boolean)
+  : [];
+
+
   return {
     code,
     name: safeStr(card?.name) ?? code,
@@ -115,9 +120,8 @@ function toCatalogEntry(card, packTitleById) {
         ? undefined
         : String(card.power),
 
-    marketPrice: undefined,
-    inventoryPrice: undefined,
-    scrapedAt: undefined,
+
+    traits,
   };
 }
 

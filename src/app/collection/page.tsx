@@ -886,59 +886,107 @@ function preloadImagesFromCatalog(list: CatalogEntry[], limit = 96) {
         <AddCardBar onAdd={addCard} />
       </div>
 
-      {/* search + toggles */}
-      <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <input
-          className="w-full rounded-lg border px-3 py-2 text-sm sm:max-w-md"
-          placeholder="Pesquisar por código ou nome..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="inline-flex rounded-lg border p-1">
-            <button
-              className={`rounded-md px-3 py-1.5 text-xs ${
-                viewMode === "list" ? "bg-black text-white" : ""
-              }`}
-              onClick={() => setViewMode("list")}
-            >
-              Lista
-            </button>
-            <button
-              className={`rounded-md px-3 py-1.5 text-xs ${
-                viewMode === "binder" ? "bg-black text-white" : ""
-              }`}
-              onClick={() => setViewMode("binder")}
-            >
-              Binder
-            </button>
+  
+      {/* toolbar: filtrar + modos */}
+      <div className="mt-6 rounded-xl border border-gray-800 bg-black p-4">
+        <div className="mb-3 flex items-baseline justify-between gap-3">
+          <div className="min-w-0">
+            <div className="text-sm font-semibold text-white">Filtrar coleção</div>
+            <div className="mt-0.5 text-xs text-gray-400">
+              Aplica-se à Lista e ao Binder
+              {isSearching ? (
+                <span className="ml-2 inline-flex items-center rounded bg-gray-900 px-2 py-0.5 text-[11px] text-gray-300">
+                  a filtrar: “{query.trim()}”
+                </span>
+              ) : null}
+            </div>
           </div>
 
-          {viewMode === "binder" && (
-            <>
-              <button
-                className={`rounded-lg border px-3 py-2 text-xs ${
-                  binderShowMissing ? "bg-black text-white" : ""
-                }`}
-                onClick={() => setBinderShowMissing((v) => !v)}
-              >
-                {binderShowMissing ? "Owned + Missing" : "Só owned"}
-              </button>
-
-              <select
-                className="rounded-lg border px-3 py-2 text-xs"
-                value={tileSize}
-                onChange={(e) => setTileSize(e.target.value as TileSize)}
-              >
-                <option value="sm" className="bg-black text-white">Tiles pequenos</option>
-                <option value="md" className="bg-black text-white">Tiles médios</option>
-                <option value="lg" className="bg-black text-white">Tiles grandes</option>
-              </select>
-            </>
+          {isSearching && (
+            <button
+              className="shrink-0 rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-white hover:bg-gray-900"
+              onClick={() => setQuery("")}
+              title="Limpar pesquisa"
+            >
+              Limpar
+            </button>
           )}
         </div>
+
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <input
+            className="w-full rounded-lg border border-gray-700 bg-black px-3 py-2 text-sm text-white placeholder:text-gray-500 sm:max-w-md"
+            placeholder='Pesquisar por código, nome… (ex: "Perona", "OP01-077")'
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Toggle Lista/Binder (o teu dark segmented) */}
+            <div className="inline-flex rounded-xl border border-gray-800 bg-black p-1">
+              <button
+                type="button"
+                aria-pressed={viewMode === "list"}
+                className={[
+                  "rounded-lg px-3 py-2 text-xs transition-colors",
+                  "focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20",
+                  viewMode === "list"
+                    ? "bg-white text-black font-semibold"
+                    : "text-gray-300 hover:bg-gray-900",
+                ].join(" ")}
+                onClick={() => setViewMode("list")}
+              >
+                Lista
+              </button>
+
+              <button
+                type="button"
+                aria-pressed={viewMode === "binder"}
+                className={[
+                  "rounded-lg px-3 py-2 text-xs transition-colors",
+                  "focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20",
+                  viewMode === "binder"
+                    ? "bg-white text-black font-semibold"
+                    : "text-gray-300 hover:bg-gray-900",
+                ].join(" ")}
+                onClick={() => setViewMode("binder")}
+              >
+                Binder
+              </button>
+            </div>
+
+            {viewMode === "binder" && (
+              <>
+                <button
+                  type="button"
+                  aria-pressed={binderShowMissing}
+                  className={[
+                    "rounded-lg border border-gray-800 px-3 py-2 text-xs transition-colors",
+                    "focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20",
+                    binderShowMissing
+                      ? "bg-white text-black font-semibold"
+                      : "bg-black text-gray-300 hover:bg-gray-900",
+                  ].join(" ")}
+                  onClick={() => setBinderShowMissing((v) => !v)}
+                >
+                  {binderShowMissing ? "Owned + Missing" : "Só owned"}
+                </button>
+
+                <select
+                  className="rounded-lg border border-gray-800 bg-black px-3 py-2 text-xs text-gray-200 hover:bg-gray-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20"
+                  value={tileSize}
+                  onChange={(e) => setTileSize(e.target.value as TileSize)}
+                >
+                  <option value="sm">Tiles pequenos</option>
+                  <option value="md">Tiles médios</option>
+                  <option value="lg">Tiles grandes</option>
+                </select>
+              </>
+            )}
+          </div>
+        </div>
       </div>
+
 
       {/* conteúdo */}
       {filtered.length === 0 ? (
@@ -1015,6 +1063,11 @@ function preloadImagesFromCatalog(list: CatalogEntry[], limit = 96) {
                       {g.missingInSet != null && (
                         <div className="text-xs text-gray-400">
                           • faltam {g.missingInSet}
+                        </div>
+                      )}
+                      {isSearching && (
+                        <div className="text-xs text-gray-400">
+                          • filtrado por “{query.trim()}”
                         </div>
                       )}
                     </div>

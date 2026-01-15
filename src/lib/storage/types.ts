@@ -23,6 +23,7 @@ export type CollectionItem = {
   note?: string;
   createdAt: string;
   updatedAt: string;
+  traits?: string[];
 };
 
 export type AppState = {
